@@ -19,8 +19,6 @@ Only `create-hsi-app` is published to public npm.
 6. The script will:
     - bump the root `package.json` version
     - bump `packages/create-hsi-app/package.json`
-    - update `templateTag` in
-      `packages/create-hsi-app/bin/create-hsi-app.mjs`
     - run `check`
     - verify GitHub CLI can create a GitHub release
     - list commits added since the previous `v*` release tag
