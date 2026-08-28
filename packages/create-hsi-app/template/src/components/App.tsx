@@ -1,0 +1,17 @@
+import type { JSX } from 'react';
+
+export function App(): JSX.Element {
+    // Keep App.tsx coordinating screens and providers. Extract components early so this never
+    // becomes a 3,000-line god file.
+    return (
+        <main className='app'>
+            <section className='app__content'>
+                <h1 className='app__title'>Vite or Next.js.</h1>
+                <p className='app__description'>
+                    create-hsi-app kick starts your frontend project with the
+                    stack you choose.
+                </p>
+            </section>
+        </main>
+    );
+}

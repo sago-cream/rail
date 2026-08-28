@@ -1,10 +1,12 @@
 #!/usr/bin/env node
 import { execFileSync } from 'node:child_process';
 import {
+    cpSync,
     existsSync,
     mkdirSync,
     readdirSync,
     readFileSync,
+    renameSync,
     rmSync,
     writeFileSync,
 } from 'node:fs';
@@ -23,8 +25,7 @@ import {
     warn,
 } from './ui.mjs';
 
-const templateRepo = 'https://github.com/sago-cream/create-hsi-app.git';
-const templateTag = 'v0.9.0';
+const templatePath = new URL('../template/', import.meta.url);
 const defaultAppName = 'my-app';
 const packageManagers = ['bun', 'npm', 'pnpm', 'yarn'];
 const lucideVersion = '1.17.0';
@@ -68,24 +69,10 @@ async function main() {
     shouldInstallDependencies = await planInstallDependencies();
     closePrompts();
 
-    section(`Cloning ${frameworkLabel(selectedFramework)} template`);
-    run('git', [
-        '-c',
-        'advice.detachedHead=false',
-        'clone',
-        '--branch',
-        templateTag,
-        '--depth',
-        '1',
-        templateRepo,
-        targetPath,
-    ]);
-
-    rmSync(join(targetPath, '.git'), { force: true, recursive: true });
-    rmSync(join(targetPath, '.github'), { force: true, recursive: true });
-    rmSync(join(targetPath, 'docs'), { force: true, recursive: true });
-    rmSync(join(targetPath, 'packages'), { force: true, recursive: true });
-    rmSync(join(targetPath, 'scripts'), { force: true, recursive: true });
+    section(`Copying ${frameworkLabel(selectedFramework)} template`);
+    cpSync(templatePath, targetPath, { recursive: true });
+    renameSync(join(targetPath, 'gitignore'), join(targetPath, '.gitignore'));
+    renameSync(join(targetPath, 'npmignore'), join(targetPath, '.npmignore'));
 
     updatePackageJson(repoPlan);
     updateBunLock();
