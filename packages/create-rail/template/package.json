@@ -1,11 +1,11 @@
 {
-    "name": "frontend-template",
-    "version": "0.9.0",
+    "name": "rail-template",
+    "version": "1.0.0",
     "private": true,
     "type": "module",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/Hsiii/frontend-template.git"
+        "url": "git+https://github.com/sago-cream/create-rail.git"
     },
     "scripts": {
         "prepare": "husky",
@@ -17,9 +17,7 @@
         "format": "prettier . --write",
         "format:check": "prettier . --check",
         "typecheck": "tsc -p tsconfig.json --noEmit",
-        "release": "release-it --config release-it.config.cjs",
-        "smoke": "node scripts/smoke-create-hsi-app.mjs",
-        "check": "tsc -p tsconfig.json --noEmit && eslint . && node --check packages/create-hsi-app/bin/create-hsi-app.mjs && node --check scripts/smoke-create-hsi-app.mjs && node --check scripts/sync-release-version.mjs && prettier . --check && vite build"
+        "check": "tsc -p tsconfig.json --noEmit && eslint . && prettier . --check && vite build"
     },
     "lint-staged": {
         "*.{js,jsx,ts,tsx,css,scss,html,json,md,yml,yaml}": [
@@ -46,7 +44,6 @@
         "husky": "^9.1.7",
         "lint-staged": "^17.0.7",
         "prettier": "3.8.3",
-        "release-it": "^20.2.0",
         "typescript": "6.0.3",
         "vite": "8.0.16"
     }

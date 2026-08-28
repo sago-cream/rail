@@ -1,7 +1,7 @@
 # Releasing
 
 This repo is template source plus release tooling. The root package is private.
-Only `create-hsi-app` is published to public npm.
+Only `create-rail` is published to public npm.
 
 ## Release Flow
 
@@ -18,7 +18,7 @@ Only `create-hsi-app` is published to public npm.
 5. Otherwise choose `patch`, `minor`, or `major`.
 6. The script will:
     - bump the root `package.json` version
-    - bump `packages/create-hsi-app/package.json`
+    - bump `packages/create-rail/package.json`
     - run `check`
     - verify GitHub CLI can create a GitHub release
     - list commits added since the previous `v*` release tag
@@ -28,7 +28,7 @@ Only `create-hsi-app` is published to public npm.
     - push `main`
     - push the tag
     - run `npm login --registry=https://registry.npmjs.org`
-    - publish `packages/create-hsi-app` to public npm
+    - publish `packages/create-rail` to public npm
     - create a matching GitHub release from the pushed tag
     - skip the release commit if no version files changed
     - skip the GitHub release if it already exists
@@ -78,15 +78,15 @@ press ENTER to open the browser login flow before publishing.
 
 ```bash
 npm login --registry=https://registry.npmjs.org
-npm publish ./packages/create-hsi-app --registry=https://registry.npmjs.org
+npm publish ./packages/create-rail --registry=https://registry.npmjs.org
 ```
 
 ## Legacy Package
 
-Keep `hsi-app` deprecated on npm.
+Keep `create-hsi-app` and `hsi-app` deprecated on npm.
 
 ## Notes
 
 - `scripts/` is ignored by npm tarballs.
-- `create-hsi-app` removes repo-only tooling from generated apps.
+- Rail removes repo-only tooling from generated apps.
 - Direct GitHub template clones still include repo-only tooling by design.

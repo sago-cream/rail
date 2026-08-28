@@ -72,7 +72,6 @@ async function main() {
     section(`Copying ${frameworkLabel(selectedFramework)} template`);
     cpSync(templatePath, targetPath, { recursive: true });
     renameSync(join(targetPath, 'gitignore'), join(targetPath, '.gitignore'));
-    renameSync(join(targetPath, 'npmignore'), join(targetPath, '.npmignore'));
 
     updatePackageJson(repoPlan);
     updateBunLock();
@@ -147,6 +146,8 @@ function updatePackageJson(repoPlan) {
     delete packageJson.packageManager;
     delete packageJson.engines;
     delete packageJson.scripts.release;
+    delete packageJson.scripts.smoke;
+    delete packageJson.devDependencies['release-it'];
 
     shouldRegenerateLockfile =
         Boolean(packageJson.dependencies['lucide-react']) !==
@@ -205,7 +206,7 @@ function updateBunLock() {
     }
 
     const lock = readFileSync(lockPath, 'utf8').replace(
-        '"name": "frontend-template"',
+        '"name": "rail-template"',
         `"name": "${appName}"`
     );
 
@@ -214,13 +215,9 @@ function updateBunLock() {
 
 function updateAppText() {
     if (selectedFramework === 'vite') {
-        replaceInFile(
-            join(targetPath, 'index.html'),
-            '<title>Frontend Template</title>',
-            {
-                with: `<title>${appName}</title>`,
-            }
-        );
+        replaceInFile(join(targetPath, 'index.html'), '<title>Rail</title>', {
+            with: `<title>${appName}</title>`,
+        });
     }
 
     writeFileSync(join(targetPath, 'src/components/App.tsx'), appComponent());
@@ -334,7 +331,7 @@ function writeAppReadme() {
     const securityNote = securityNoteForPackageManager();
     const readme = `# ${appName}
 
-Created from the ${frameworkDescription(selectedFramework)} frontend template.
+Created with Rail using ${frameworkDescription(selectedFramework)}.
 
 ## Install
 
@@ -1066,7 +1063,7 @@ import './global.css';
 
 export const metadata: Metadata = {
     title: '${appName}',
-    description: 'Created from create-hsi-app.',
+    description: 'Created with Rail.',
 };
 
 interface RootLayoutProps {

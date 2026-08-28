@@ -1,11 +1,11 @@
 {
-    "name": "frontend-template",
-    "version": "0.9.0",
+    "name": "rail-template",
+    "version": "1.0.0",
     "private": true,
     "type": "module",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/sago-cream/create-hsi-app.git"
+        "url": "git+https://github.com/sago-cream/create-rail.git"
     },
     "scripts": {
         "prepare": "husky",
@@ -18,8 +18,8 @@
         "format:check": "prettier . --check",
         "typecheck": "tsc -p tsconfig.json --noEmit",
         "release": "release-it --config release-it.config.cjs",
-        "smoke": "node scripts/smoke-create-hsi-app.mjs",
-        "check": "tsc -p tsconfig.json --noEmit && eslint . && node --check packages/create-hsi-app/bin/create-hsi-app.mjs && node --check scripts/smoke-create-hsi-app.mjs && node --check scripts/sync-release-version.mjs && prettier . --check && vite build"
+        "smoke": "node scripts/smoke-create-rail.mjs",
+        "check": "tsc -p tsconfig.json --noEmit && eslint . && node --check packages/create-rail/bin/create-rail.mjs && node --check scripts/smoke-create-rail.mjs && node --check scripts/sync-release-version.mjs && prettier . --check && vite build"
     },
     "lint-staged": {
         "*.{js,jsx,ts,tsx,css,scss,html,json,md,yml,yaml}": [

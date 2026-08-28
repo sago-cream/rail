@@ -7,7 +7,7 @@ export default [
         ignores: [
             'dist/**',
             'node_modules/**',
-            'packages/create-hsi-app/**',
+            'packages/create-rail/**',
             'release-it*.config.cjs',
             'scripts/**',
         ],

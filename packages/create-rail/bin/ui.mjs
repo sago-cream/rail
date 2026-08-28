@@ -4,7 +4,7 @@ import color from 'picocolors';
 const branch = color.dim('│');
 
 export function intro(appName, targetPath) {
-    prompts.intro(color.inverse(' create-hsi-app '));
+    prompts.intro(color.inverse(' Rail '));
     console.log(branch);
     console.log(
         `${color.cyan('◇')}  Scaffolding ${color.bold(appName)} in ${targetPath}`
