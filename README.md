@@ -1,10 +1,9 @@
 # Rail
 
-One command. Clean repo. Agent on rails.
+Start building your app and keep your agent on the rails.
 
 Rail creates a ready-to-code Vite or Next.js React app with strict TypeScript,
-linting, formatting, pre-commit checks, and dependency age gates already wired.
-Coding agents can move fast without turning the repository into a mess.
+linting, formatting, pre-commit checks, and dependency age gates. This lets your agents iterate with forced clean code, best practices, and stay safe from supply-chain attacks.
 
 ## What Rail sets up
 
@@ -16,12 +15,11 @@ Coding agents can move fast without turning the repository into a mess.
 - Package-age gating for supply-chain security
 - VS Code linting and formatting settings
 - Styled or minimal starter CSS
-- Lucide React by default
-- Optional TanStack React Query
+- Optional Lucide React and TanStack React Query
 
-## Create an app
+## Create an App
 
-### npm
+### npm 
 
 ```bash
 npm create rail@latest
