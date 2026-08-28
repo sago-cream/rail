@@ -11,7 +11,7 @@ dist/
 # Repository automation
 .github/
 docs/
-packages/create-hsi-app/
+packages/create-rail/
 scripts/
 
 # Registry auth config

@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "frontend-template",
+      "name": "rail-template",
       "dependencies": {
         "lucide-react": "1.17.0",
         "react": "19.2.7",

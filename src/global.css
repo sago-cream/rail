@@ -52,6 +52,13 @@ a {
     text-align: center;
 }
 
+.app__eyebrow {
+    color: var(--clr-text-muted);
+    font: var(--font-label);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
 .app__title {
     font: var(--font-display);
     letter-spacing: -0.04em;

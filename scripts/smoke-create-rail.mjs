@@ -7,7 +7,7 @@ import { join, resolve } from 'node:path';
 const repoRoot = resolve(import.meta.dirname, '..');
 const cliScriptPath = resolve(
     repoRoot,
-    'packages/create-hsi-app/bin/create-hsi-app.mjs'
+    'packages/create-rail/bin/create-rail.mjs'
 );
 
 const rawArgs = process.argv.slice(2);
@@ -48,7 +48,7 @@ if (!hasExplicitFramework) {
     passthroughArgs.unshift('--vite');
 }
 
-const smokeRoot = mkdtempSync(join(tmpdir(), 'create-hsi-app-smoke-'));
+const smokeRoot = mkdtempSync(join(tmpdir(), 'create-rail-smoke-'));
 const targetPath = join(smokeRoot, 'app');
 
 console.log(`Smoke target: ${targetPath}`);
