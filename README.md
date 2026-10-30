@@ -19,7 +19,7 @@ linting, formatting, pre-commit checks, and dependency age gates. This lets your
 
 ## Create an App
 
-### npm 
+### npm
 
 ```bash
 npm create rail@latest
