@@ -31,6 +31,20 @@ When the CLI creates a git repository, it keeps the Husky pre-commit hook and
 runs lint-staged with the selected package manager. Repo-less scaffolds omit
 that git-only tooling.
 
+## Dependency versions
+
+Stable dependencies use compatible version ranges. Optional dependencies are
+maintained in `packages/create-rail/bin/dependency-versions.mjs`; major upgrades
+are reviewed separately.
+
+New apps resolve dependencies during installation and generate their own lockfile.
+Commit that lockfile to keep subsequent installs reproducible. Rail keeps a
+seven-day release-age gate in the selected package manager's configuration.
+
+The generated `packageManager` field records the selected package manager's
+installed version. If it is unavailable when using `--noInstall`, the field is
+omitted until you install and configure your package manager.
+
 ## Smoke Test
 
 Run the local CLI end-to-end with a temporary target directory:

@@ -12,6 +12,7 @@ import {
 } from 'node:fs';
 import { basename, join, resolve } from 'node:path';
 
+import { dependencyVersions } from './dependency-versions.mjs';
 import {
     closePrompts,
     confirm,
@@ -28,9 +29,6 @@ import {
 const templatePath = new URL('../template/', import.meta.url);
 const defaultAppName = 'my-app';
 const packageManagers = ['bun', 'npm', 'pnpm', 'yarn'];
-const lucideVersion = '1.17.0';
-const queryVersion = '5.101.0';
-const nextVersion = '16.2.7';
 const rawArgs = process.argv.slice(2);
 const parsedArgs = parseCliArgs(rawArgs);
 let selectedPackageManager = resolvePackageManager(parsedArgs);
@@ -43,7 +41,6 @@ let shouldInstallDependencies = !(
     parsedArgs.noInstall || readNpmBooleanFlag('noinstall')
 );
 const shouldSkipRepoSetup = parsedArgs.noRepo || readNpmBooleanFlag('norepo');
-let shouldRegenerateLockfile = false;
 const isInteractive = process.stdin.isTTY && process.stdout.isTTY;
 const targetArg = parsedArgs.targetArg ?? '.';
 const targetPath = resolve(targetArg);
@@ -74,7 +71,6 @@ async function main() {
     renameSync(join(targetPath, 'gitignore'), join(targetPath, '.gitignore'));
 
     updatePackageJson(repoPlan);
-    updateBunLock();
     console.log();
     section('Customizing project files');
     console.log(`- framework: ${frameworkLabel(selectedFramework)}`);
@@ -95,9 +91,6 @@ async function main() {
     console.log(`- .gitignore: framework build artifacts`);
     console.log(`- README.md: install/dev/check commands`);
     console.log(`- package manager config: ${packageManagerConfigFile()}`);
-    if (selectedPackageManager === 'bun') {
-        console.log(`- bun.lock: package name`);
-    }
     updateFrameworkFiles();
     updateAppText();
     updateGitIgnore();
@@ -149,21 +142,16 @@ function updatePackageJson(repoPlan) {
     delete packageJson.scripts.smoke;
     delete packageJson.devDependencies['release-it'];
 
-    shouldRegenerateLockfile =
-        Boolean(packageJson.dependencies['lucide-react']) !==
-            shouldIncludeLucide ||
-        Boolean(packageJson.dependencies['@tanstack/react-query']) !==
-            shouldIncludeQuery ||
-        !repoPlan;
-
     if (shouldIncludeLucide) {
-        packageJson.dependencies['lucide-react'] = lucideVersion;
+        packageJson.dependencies['lucide-react'] =
+            dependencyVersions['lucide-react'];
     } else {
         delete packageJson.dependencies['lucide-react'];
     }
 
     if (shouldIncludeQuery) {
-        packageJson.dependencies['@tanstack/react-query'] = queryVersion;
+        packageJson.dependencies['@tanstack/react-query'] =
+            dependencyVersions['@tanstack/react-query'];
     } else {
         delete packageJson.dependencies['@tanstack/react-query'];
     }
@@ -180,8 +168,9 @@ function updatePackageJson(repoPlan) {
         delete packageJson.scripts.preview;
         packageJson.scripts.check =
             'tsc -p tsconfig.json --noEmit && eslint . && prettier . --check && next build';
-        packageJson.dependencies.next = nextVersion;
-        packageJson.devDependencies['@next/eslint-plugin-next'] = nextVersion;
+        packageJson.dependencies.next = dependencyVersions.next;
+        packageJson.devDependencies['@next/eslint-plugin-next'] =
+            dependencyVersions['@next/eslint-plugin-next'];
         delete packageJson.devDependencies['@vitejs/plugin-react'];
         delete packageJson.devDependencies.vite;
     } else {
@@ -191,26 +180,6 @@ function updatePackageJson(repoPlan) {
     packageJson.packageManager = packageManagerDeclaration();
 
     writeFileSync(packageJsonPath, `${JSON.stringify(packageJson, null, 4)}\n`);
-}
-
-function updateBunLock() {
-    const lockPath = join(targetPath, 'bun.lock');
-
-    if (!existsSync(lockPath)) {
-        return;
-    }
-
-    if (selectedPackageManager !== 'bun' || shouldRegenerateLockfile) {
-        rmSync(lockPath, { force: true });
-        return;
-    }
-
-    const lock = readFileSync(lockPath, 'utf8').replace(
-        '"name": "rail-template"',
-        `"name": "${appName}"`
-    );
-
-    writeFileSync(lockPath, lock);
 }
 
 function updateAppText() {
@@ -960,8 +929,8 @@ function nextEnvTypes() {
 function nextConfig() {
     return `/** @type {import("next").NextConfig} */
 const nextConfig = {
-    output: 'export',
     distDir: './dist',
+    output: 'export',
 };
 
 export default nextConfig;
@@ -975,9 +944,7 @@ import { completeConfigBase } from 'eslint-config-complete';
 export default [
     ...completeConfigBase,
 
-    {
-        ignores: ['.next/**', 'dist/**', 'node_modules/**'],
-    },
+    { ignores: ['.next/**', 'dist/**', 'node_modules/**'] },
 
     {
         plugins: {
@@ -986,29 +953,18 @@ export default [
         rules: {
             ...nextPlugin.configs.recommended.rules,
             ...nextPlugin.configs['core-web-vitals'].rules,
-            '@stylistic/quotes': [
-                'error',
-                'single',
-                {
-                    avoidEscape: true,
-                },
-            ],
-            'import-x/no-unassigned-import': [
-                'error',
-                {
-                    allow: ['**/*.css'],
-                },
-            ],
+            '@stylistic/quotes': ['error', 'single', { avoidEscape: true }],
+            'import-x/no-unassigned-import': ['error', { allow: ['**/*.css'] }],
         },
     },
 
     {
         files: ['src/app/**/*.tsx'],
         rules: {
-            'complete/no-mutable-return': 'off',
             '@typescript-eslint/explicit-module-boundary-types': 'off',
-            'n/file-extension-in-import': 'off',
+            'complete/no-mutable-return': 'off',
             'import-x/no-default-export': 'off',
+            'n/file-extension-in-import': 'off',
         },
     },
 ];
@@ -1056,7 +1012,7 @@ function nextTsconfig() {
 }
 
 function nextLayout() {
-    return `import type { JSX, ReactNode } from 'react';
+    return `import type { JSX, PropsWithChildren } from 'react';
 import type { Metadata } from 'next';
 
 import './global.css';
@@ -1066,11 +1022,9 @@ export const metadata: Metadata = {
     description: 'Created with Rail.',
 };
 
-interface RootLayoutProps {
-    readonly children: ReactNode;
-}
-
-export default function RootLayout({ children }: RootLayoutProps): JSX.Element {
+export default function RootLayout({
+    children,
+}: PropsWithChildren): JSX.Element {
     return (
         <html lang='en'>
             <body>{children}</body>
@@ -1194,18 +1148,13 @@ a {
 }
 
 function packageManagerDeclaration() {
-    switch (selectedPackageManager) {
-        case 'bun':
-            return 'bun@1.3.9';
-        case 'npm':
-            return 'npm@11';
-        case 'pnpm':
-            return 'pnpm@10';
-        case 'yarn':
-            return 'yarn@4';
-        default:
-            fail(`Unsupported package manager: ${selectedPackageManager}`);
-    }
+    const version = run(selectedPackageManager, ['--version'], {
+        cwd: targetPath,
+        capture: true,
+        allowFailure: true,
+    })?.trim();
+
+    return version ? `${selectedPackageManager}@${version}` : undefined;
 }
 
 function lintStagedCommand() {

@@ -15,19 +15,8 @@ export default [
 
     {
         rules: {
-            '@stylistic/quotes': [
-                'error',
-                'single',
-                {
-                    avoidEscape: true,
-                },
-            ],
-            'import-x/no-unassigned-import': [
-                'error',
-                {
-                    allow: ['**/*.css'],
-                },
-            ],
+            '@stylistic/quotes': ['error', 'single', { avoidEscape: true }],
+            'import-x/no-unassigned-import': ['error', { allow: ['**/*.css'] }],
         },
     },
 ];
